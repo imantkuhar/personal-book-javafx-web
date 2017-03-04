@@ -1,7 +1,6 @@
 package controllers;
 
 import api.ContactApi;
-import com.google.gson.Gson;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,13 +11,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import main.StartFxApp;
 import model.Contact;
 import service.ContactServiceImpl;
-import main.StartFxApp;
 import utils.AlertDialogUtil;
 import utils.PropertiesHolder;
+import utils.ContactTableViewService;
 
 import java.io.IOException;
 import java.net.URL;
@@ -38,8 +37,12 @@ public class MainViewController implements Initializable {
     @FXML
     private TableColumn tcId, tcName, tcNumber, tcAddress, tcGroup;
     private ObservableList<Contact> contactList;
+    @FXML
+    private ProgressIndicator piContactList;
+
 
     private ContactServiceImpl contactService = new ContactServiceImpl();
+    private ContactApi contactApi = new ContactApi();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -52,30 +55,24 @@ public class MainViewController implements Initializable {
     }
 
     private void initContactListView() {
-        ContactApi contactApi = new ContactApi();
+        piContactList.setVisible(true);
         contactApi.getAllContacts(new ContactApi.ContactCallback() {
             @Override
             public void onSuccess(List<Contact> contacts) {
-                contactList = FXCollections.observableArrayList(contacts);
-                tcId.setCellValueFactory(new PropertyValueFactory<Contact, Integer>("id"));
-                tcName.setCellValueFactory(new PropertyValueFactory<Contact, String>("name"));
-                tcNumber.setCellValueFactory(new PropertyValueFactory<Contact, String>("phoneNumber"));
-                tcAddress.setCellValueFactory(new PropertyValueFactory<Contact, String>("address"));
-                tcGroup.setCellValueFactory(new PropertyValueFactory<Contact, String>("group"));
-                tvContactList.setItems(contactList);
+                ContactTableViewService.fillUpContactTable(contactList, contacts, tcId, tcName, tcNumber, tcAddress, tcGroup, tvContactList, piContactList);
             }
 
             @Override
             public void onError() {
-                AlertDialogUtil.showSuccessDialog("xuy", new AlertDialogUtil.AlertDialogCallback() {
+                AlertDialogUtil.showCancelDialog("Can't find list of contacts", new AlertDialogUtil.AlertDialogCallback() {
                     @Override
                     public void onConfirm() {
-
+                        System.out.println("onConfirm");
                     }
 
                     @Override
                     public void onCanceled() {
-
+                        System.out.println("onCanceled");
                     }
                 });
             }
@@ -83,18 +80,6 @@ public class MainViewController implements Initializable {
             @Override
             public void onCancel() {
                 System.out.println("Canceled");
-            }
-        });
-
-        AlertDialogUtil.showSuccessDialog("xuy", new AlertDialogUtil.AlertDialogCallback() {
-            @Override
-            public void onConfirm() {
-
-            }
-
-            @Override
-            public void onCanceled() {
-
             }
         });
     }
@@ -158,8 +143,45 @@ public class MainViewController implements Initializable {
         btUpdateTable.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                contactList = FXCollections.observableArrayList(contactService.getAllContacts());
-                tvContactList.setItems(contactList);
+                piContactList.setVisible(true);
+                contactApi.getAllContacts(new ContactApi.ContactCallback() {
+                    @Override
+                    public void onSuccess(List<Contact> contacts) {
+                        ContactTableViewService.fillUpContactTable(contactList, contacts, tcId, tcName, tcNumber, tcAddress, tcGroup, tvContactList, piContactList);
+                    }
+
+                    @Override
+                    public void onError() {
+//                AlertDialogUtil.showSuccessDialog("xuy", new AlertDialogUtil.AlertDialogCallback() {
+//                    @Override
+//                    public void onConfirm() {
+//
+//                    }
+//
+//                    @Override
+//                    public void onCanceled() {
+//
+//                    }
+//                });
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        System.out.println("Canceled");
+                    }
+                });
+//
+//        AlertDialogUtil.showSuccessDialog("xuy", new AlertDialogUtil.AlertDialogCallback() {
+//            @Override
+//            public void onConfirm() {
+//
+//            }
+//
+//            @Override
+//            public void onCanceled() {
+//
+//            }
+//        });
             }
         });
     }

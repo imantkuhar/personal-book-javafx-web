@@ -38,14 +38,14 @@ public class AddContactController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setButtonSaveListener();
+//        setButtonSaveListener();
         setButtonGoBackListener();
     }
 
-    private void setButtonSaveListener() {
-        btSave.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
+//    private void setButtonSaveListener() {
+//        btSave.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent event) {
 //                Contact newContact = new Contact(tfName.getText(), tfPhoneNumber.getText(), tfAddress.getText(), tfGroup.getText());
 //                if (contactValidator.checkAllTextField(newContact)) {
 //
@@ -74,28 +74,9 @@ public class AddContactController implements Initializable {
 //                        }
 //                    });
 //                }
-
-
-                MessageViewController messageViewController = new MessageViewController();
-
-                String MESSAGE_VIEW_ROOT = PropertiesHolder.getProperty("MESSAGE_VIEW_ROOT");
-                FXMLLoader fxmlMessageView = new FXMLLoader(getClass().getClassLoader().getResource(MESSAGE_VIEW_ROOT));
-                fxmlMessageView.setController(messageViewController);
-
-                Parent parent = null;
-                try {
-                    parent = fxmlMessageView.load();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                Scene messageScene = new Scene(parent);
-                Stage mainStage = StartFxApp.getInstance().getMainStage();
-                mainStage.setScene(messageScene);
-//                mainStage.
-            }
-        });
-    }
+//            }
+//        });
+//    }
 
     private void setButtonGoBackListener() {
         btGoBack.setOnAction(new EventHandler<ActionEvent>() {

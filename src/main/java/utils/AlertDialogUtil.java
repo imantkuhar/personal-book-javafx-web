@@ -15,22 +15,33 @@ public class AlertDialogUtil {
         void onCanceled();
     }
 
-    public static void showErrorDialog(String message){
+    public static void showErrorDialog(String message, AlertDialogCallback callback){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Dialog");
+        alert.setHeaderText(message);
+        alert.setContentText(message);
+        alert.showAndWait();
 
+//        Optional<ButtonType> result = alert.showAndWait();
+//        if (result.get() == ButtonType.OK){
+//            callback.onConfirm();
+//        } else {
+//            callback.onCanceled();
+//        }
     }
 
-    public static void showSuccessDialog(String message, AlertDialogCallback callback){
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation Dialog");
-        alert.setHeaderText("Look, a Confirmation Dialog");
-        alert.setContentText("Are you ok with this?");
+    public static void showCancelDialog(String message, AlertDialogCallback callback){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Cancel Dialog");
+        alert.setHeaderText(message);
+        alert.setContentText(message);
+        alert.showAndWait();
 
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK){
-            callback.onConfirm();
-        } else {
-            callback.onCanceled();
-        }
+//        Optional<ButtonType> result = alert.showAndWait();
+//        if (result.get() == ButtonType.OK){
+//            callback.onConfirm();
+//        } else {
+//            callback.onCanceled();
+//        }
     }
-
 }

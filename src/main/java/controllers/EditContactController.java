@@ -12,7 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import main.StartFxApp;
 import model.Contact;
-import service.ContactServiceImpl;
+//import service.ContactServiceImpl;
 import validators.ContactValidator;
 
 import java.awt.*;
@@ -31,7 +31,7 @@ public class EditContactController implements Initializable {
     private Button btSaveChanges, btGoBack;
 
     private ContactValidator contactValidator = new ContactValidator();
-    private ContactServiceImpl contactService = new ContactServiceImpl();
+//    private ContactServiceImpl contactService = new ContactServiceImpl();
     private Contact contact;
 
     public void setContact(Contact contact) {

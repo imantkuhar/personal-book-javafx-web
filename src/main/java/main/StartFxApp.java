@@ -3,7 +3,6 @@ package main;
 import controllers.AddContactController;
 import controllers.EditContactController;
 import controllers.MainViewController;
-import controllers.MessageViewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,7 +23,6 @@ public class StartFxApp extends Application {
     private MainViewController mainViewController;
     private EditContactController editContactController;
     private AddContactController addContactController;
-    private MessageViewController messageViewController;
 
     private static StartFxApp instance;
 
