@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="490.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainViewController">
+   <children>
+      <TextField fx:id="tfFindContact" layoutX="15.0" layoutY="15.0" prefHeight="40.0" prefWidth="160.0" />
+      <Button fx:id="btAdd" layoutX="185.0" layoutY="15.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="+" />
+      <Button fx:id="btDelete" layoutX="235.0" layoutY="15.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="-" />
+       <Button fx:id="btEdit" layoutX="371.0" layoutY="15.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="104.0" text="Edit contact" />
+       <TableView fx:id="tvContactList" layoutX="14.0" layoutY="67.0" prefHeight="281.0" prefWidth="460.0">
+        <columns>
+          <TableColumn fx:id="tcId" prefWidth="30.0" text="N" />
+          <TableColumn fx:id="tcName" prefWidth="80.0" text="Name" />
+           <TableColumn fx:id="tcNumber" prefWidth="120.0" text="Number" />
+            <TableColumn fx:id="tcAddress" minWidth="0.0" prefWidth="95.0" text="Address" />
+            <TableColumn fx:id="tcGroup" prefWidth="132.0" text="Group" />
+        </columns>
+      </TableView>
+      <Button fx:id="btUpdateTable" layoutX="286.0" layoutY="15.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="75.0" text="Update ">
+         <font>
+            <Font size="12.0" />
+         </font></Button>
+
+   </children>
+</Pane>

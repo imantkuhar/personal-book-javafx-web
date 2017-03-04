@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="190.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label fx:id="tfMassage" layoutX="80.0" layoutY="30.0" prefHeight="40.0" prefWidth="205.0" text="Massage: " textAlignment="CENTER" />
+        <Button fx:id="btOk" layoutX="114.0" layoutY="95.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="122.0" text="OK" />
+    </children>
+</Pane>
