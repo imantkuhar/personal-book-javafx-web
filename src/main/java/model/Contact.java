@@ -84,4 +84,8 @@ public class Contact {
                 '}';
     }
 
+    public String toStringForSearch() {
+        return "" + name + " " + phoneNumber + " " + address + " " + group + "" ;
+    }
+
 }

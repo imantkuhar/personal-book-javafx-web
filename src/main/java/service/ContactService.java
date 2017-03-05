@@ -1,22 +1,22 @@
 package service;
 
+import api.callback.AddContactCallback;
+import api.callback.DeleteContactCallback;
+import api.callback.GetAllContactsCallback;
+import api.callback.UpdateContactCallback;
 import model.Contact;
-
-import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Created by Imant on 16.11.16.
  */
 public interface ContactService {
 
-    boolean addContact(Contact contact);
+    void getAllContacts(GetAllContactsCallback callback);
 
-    boolean deleteContactById(int id);
+    void updateContact(Contact contact, UpdateContactCallback callback);
 
-    boolean updateContact(Contact contact);
+    void deleteContact(Contact contact, DeleteContactCallback callback);
 
-    List<Contact> getAllContacts();
+    void addContact(Contact contact, AddContactCallback callback);
 
-    List<Contact> getAllContactByString(String string);
 }

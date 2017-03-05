@@ -1,38 +1,36 @@
 package service;
 
-import db.ContactDao;
+import api.ContactApi;
+import api.callback.AddContactCallback;
+import api.callback.DeleteContactCallback;
+import api.callback.GetAllContactsCallback;
+import api.callback.UpdateContactCallback;
 import model.Contact;
-
-import java.util.List;
 
 /**
  * Created by Imant on 14.11.16.
  */
 public class ContactServiceImpl implements ContactService {
 
-    private ContactDao contactDao;
+    private ContactApi contactApi;
 
     public ContactServiceImpl() {
-        contactDao = ContactDao.getInstance();
+        contactApi = ContactApi.getInstance();
     }
 
-    public boolean addContact(Contact contact) {
-        return contactDao.addContact(contact);
+    public void getAllContacts(GetAllContactsCallback callback) {
+        contactApi.getAllContacts(callback);
     }
 
-    public boolean deleteContactById(int id) {
-        return contactDao.deleteContact(id);
+    public void updateContact(Contact contact, UpdateContactCallback callback) {
+        contactApi.updateContact(contact, callback);
     }
 
-    public boolean updateContact(Contact contact) {
-        return contactDao.updateContact(contact);
+    public void deleteContact(Contact contact, DeleteContactCallback callback) {
+        contactApi.deleteContact(contact, callback);
     }
 
-    public List<Contact> getAllContacts() {
-        return contactDao.getAllContacts();
-    }
-
-    public List<Contact> getAllContactByString(String stringForSearch) {
-        return contactDao.getAllContactByString(stringForSearch);
+    public void addContact(Contact contact, AddContactCallback callback) {
+        contactApi.addContact(contact, callback);
     }
 }

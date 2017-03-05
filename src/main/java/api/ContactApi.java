@@ -1,121 +1,127 @@
 package api;
 
+import api.callback.ContactCallback;
+import api.callback.DeleteContactCallback;
+import api.callback.GetAllContactsCallback;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.async.Callback;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import model.Contact;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 /**
  * Created by Imant on 02.03.17.
  */
 public class ContactApi {
 
-    public interface ContactCallback {
-        void onSuccess(List<Contact> contacts);
+    private static ContactApi instance;
 
-        void onError();
+    private static final String BASE_URL = "http://localhost:8080";
 
-        void onCancel();
+    private ContactApi() {
+        Unirest.setObjectMapper(new ObjectMapper() {
+            public <T> T readValue(String value, Class<T> valueType) {
+                return new Gson().fromJson(value, valueType);
+            }
+
+            public String writeValue(Object value) {
+                return new Gson().toJson(value);
+            }
+        });
     }
 
-    public void addContact(Contact contact, ContactCallback callback) {
-        String fullURL = "https://jsonplaceholder.typicode.com/posts/35";
+    public static ContactApi getInstance() {
+        if (instance == null)
+            instance = new ContactApi();
+        return instance;
+    }
+
+    public void getAllContacts(GetAllContactsCallback callback) {
+        String url = BASE_URL + "/contacts";
         try {
-            Unirest.post(fullURL).asJsonAsync(new Callback<JsonNode>() {
-                public void completed(HttpResponse<JsonNode> response) {
-
-//                    String dtr = "{[]}"
-//
-//                    callback.onSuccess();
+            Unirest.get(url).asObjectAsync(Contact[].class, new Callback<Contact[]>() {
+                @Override
+                public void completed(HttpResponse<Contact[]> response) {
+                    callback.onSuccess(Arrays.asList(response.getBody()));
                 }
 
+                @Override
                 public void failed(UnirestException e) {
-                    callback.onError();
+
                 }
 
+                @Override
                 public void cancelled() {
-                    callback.onCancel();
+
                 }
             });
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void getAllContacts(ContactCallback callback) {
-        String fullURL = "https://jsonplaceholder.typicode.com/posts/35";
+
+    public void deleteContact(Contact contact, DeleteContactCallback deleteContactCallback) {
         try {
-            Unirest.get(fullURL).asJsonAsync(new Callback<JsonNode>() {
-                public void completed(HttpResponse<JsonNode> response) {
-                    String contacts = "[{\"id\":9,\"name\":\"Andrey\",\"phoneNumber\":\"093-243-5861\",\"address\":\"Kharkiv\",\"group\":\"Jobs\",\"date\":\"Nov 23, 2016 2:21:00 AM\"},{\"id\":11,\"name\":\"Ivan\",\"phoneNumber\":\"067-684-2475\",\"address\":\"Lviv\",\"group\":\"Friend\",\"date\":\"Jan 17, 2017 10:24:00 PM\"},{\"id\":12,\"name\":\"Dima\",\"phoneNumber\":\"093-243-5861\",\"address\":\"Odessa\",\"group\":\"Job85\",\"date\":\"Jan 17, 2017 10:24:00 PM\"},{\"id\":13,\"name\":\"Roma\",\"phoneNumber\":\"097-385-8713\",\"address\":\"Kiev\",\"group\":\"Genesis Group\",\"date\":\"Jan 17, 2017 10:24:00 PM\"},{\"id\":14,\"name\":\"Andrey\",\"phoneNumber\":\"093-243-5861\",\"address\":\"Kharkiv\",\"group\":\"Job\",\"date\":\"Jan 17, 2017 10:24:00 PM\"},{\"id\":16,\"name\":\"Dima\",\"phoneNumber\":\"093-243-5861\",\"address\":\"Odessa\",\"group\":\"Job\",\"date\":\"Jan 17, 2017 10:25:00 PM\"},{\"id\":17,\"name\":\"Roma\",\"phoneNumber\":\"097-385-8713\",\"address\":\"Kiev\",\"group\":\"Genesis Group\",\"date\":\"Jan 17, 2017 10:25:00 PM\"},{\"id\":18,\"name\":\"Andrey\",\"phoneNumber\":\"093-243-5861\",\"address\":\"Kharkiv\",\"group\":\"Job\",\"date\":\"Jan 17, 2017 10:25:00 PM\"},{\"id\":20,\"name\":\"Dima\",\"phoneNumber\":\"093-243-5861\",\"address\":\"Odessa\",\"group\":\"Jobli\",\"date\":\"Jan 17, 2017 10:27:00 PM\"},{\"id\":21,\"name\":\"Roma\",\"phoneNumber\":\"097-385-8713\",\"address\":\"Kiev\",\"group\":\"Genesis Group\",\"date\":\"Jan 17, 2017 10:27:00 PM\"},{\"id\":22,\"name\":\"Andrey\",\"phoneNumber\":\"093-243-5861\",\"address\":\"Kharkiv\",\"group\":\"Job\",\"date\":\"Jan 17, 2017 10:27:00 PM\"}]";
-                    Type listType = new TypeToken<ArrayList<Contact>>() {
-                    }.getType();
-                    List<Contact> contactList = new Gson().fromJson(contacts, listType);
-                    callback.onSuccess(contactList);
-                }
-
-                public void failed(UnirestException e) {
-                    callback.onError();
-                }
-
-                public void cancelled() {
-                    callback.onCancel();
-                }
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void getContact(Contact contact, ContactCallback callback) {
-        String fullURL = "https://jsonplaceholder.typicode.com/posts/35";
-        try {
-            Unirest.get(fullURL).asJsonAsync(new Callback<JsonNode>() {
+            Unirest.delete(BASE_URL).body(contact).asJsonAsync(new Callback<JsonNode>() {
                 public void completed(HttpResponse<JsonNode> response) {
 
                 }
 
                 public void failed(UnirestException e) {
-                    callback.onError();
+
                 }
 
                 public void cancelled() {
-                    callback.onCancel();
+
                 }
             });
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void updateContact(Contact contact, ContactCallback callback) {
-        String fullURL = "https://jsonplaceholder.typicode.com/posts/35";
         try {
-            Unirest.put(fullURL).asJsonAsync(new Callback<JsonNode>() {
+            Unirest.put(BASE_URL).asJsonAsync(new Callback<JsonNode>() {
                 public void completed(HttpResponse<JsonNode> response) {
-                    callback.onSuccess(null);
+
                 }
 
                 public void failed(UnirestException e) {
-                    callback.onError();
+
                 }
 
                 public void cancelled() {
-                    callback.onCancel();
+
                 }
             });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+
+    public void addContact(Contact contact, ContactCallback callback) {
+        try {
+            Unirest.post(BASE_URL).body(contact).asJsonAsync(new Callback<JsonNode>() {
+                public void completed(HttpResponse<JsonNode> response) {
+
+                }
+
+                public void failed(UnirestException e) {
+
+                }
+
+                public void cancelled() {
+
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }

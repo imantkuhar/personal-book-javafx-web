@@ -21,13 +21,6 @@ public class AlertDialogUtil {
         alert.setHeaderText(message);
         alert.setContentText(message);
         alert.showAndWait();
-
-//        Optional<ButtonType> result = alert.showAndWait();
-//        if (result.get() == ButtonType.OK){
-//            callback.onConfirm();
-//        } else {
-//            callback.onCanceled();
-//        }
     }
 
     public static void showCancelDialog(String message, AlertDialogCallback callback){
