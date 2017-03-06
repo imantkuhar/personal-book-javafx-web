@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import main.StartFxApp;
 import model.Contact;
 import service.ContactServiceImpl;
+import utils.AlertDialogUtil;
 import utils.PropertiesHolder;
 
 import java.io.IOException;
@@ -164,8 +165,20 @@ public class MainViewController extends BaseController implements Initializable 
 
     private DeleteContactCallback deleteContactCallback = new DeleteContactCallback() {
         @Override
-        public void onSuccess() {
-            // TODO: 05.03.17 just show alert
+        public void onSuccess(Contact contact) {
+            showProgress();
+            contactService.getAllContacts(getAllContactsCallback);
+            AlertDialogUtil.showCancelDialog("FUCK", new AlertDialogUtil.AlertDialogCallback() {
+                @Override
+                public void onConfirm() {
+
+                }
+
+                @Override
+                public void onCanceled() {
+
+                }
+            });
         }
 
         @Override
