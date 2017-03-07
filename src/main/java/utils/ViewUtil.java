@@ -1,6 +1,5 @@
 package utils;
 
-import controllers.AddContactController;
 import controllers.EditContactController;
 import controllers.MainViewController;
 import javafx.fxml.FXMLLoader;
@@ -26,21 +25,20 @@ public class ViewUtil {
     }
 
     public static void showAddView(MainViewController mainViewController) {
-
-        String ADD_CONTACT_VIEW_ROOT = PropertiesHolder.getProperty("ADD_NEW_CONTACT_VIEW_ROOT");
-        FXMLLoader fxmlAddLoader = new FXMLLoader(mainViewController.getClass().getClassLoader().getResource(ADD_CONTACT_VIEW_ROOT));
-        Parent parent = null;
+        String ADD_NEW_CONTACT_VIEW_ROOT = PropertiesHolder.getProperty("ADD_NEW_CONTACT_VIEW_ROOT");
+        Parent addContactParent = null;
         try {
-            parent = fxmlAddLoader.load();
+            addContactParent = FXMLLoader.load(mainViewController.getClass().getClassLoader().getResource(ADD_NEW_CONTACT_VIEW_ROOT));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initStyle(StageStyle.UNIFIED);
+//        stage.initStyle(StageStyle.UNIFIED);
         stage.setTitle("Add New Contact");
-        stage.setScene(new Scene(parent));
+        Scene addContactScene = new Scene(addContactParent);
+        stage.setScene(addContactScene);
         stage.show();
     }
 
@@ -59,6 +57,7 @@ public class ViewUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         Scene editContactScene = new Scene(parent);
         Stage mainStage = StartFxApp.getInstance().getMainStage();
         mainStage.setScene(editContactScene);

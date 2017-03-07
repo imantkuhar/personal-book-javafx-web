@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import model.Contact;
 import service.ContactServiceImpl;
 import utils.ViewUtil;
@@ -24,19 +25,19 @@ public class AddContactController extends BaseController implements Initializabl
     @FXML
     private TextField tfName, tfPhoneNumber, tfAddress, tfGroup;
     @FXML
-    private Button btSave, btGoBack;
+    private Button btSave;
     @FXML
     private ProgressIndicator piAddContact;
 
     private ContactValidator contactValidator = new ContactValidator();
     private ContactServiceImpl contactService = ContactServiceImpl.getInstance();
 
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         contactService.setAddView(this);
         setProgressIndicator(piAddContact);
         setButtonSaveListener();
-        setButtonGoBackListener();
     }
 
     private void setButtonSaveListener() {
@@ -45,12 +46,6 @@ public class AddContactController extends BaseController implements Initializabl
             if (contactValidator.checkAllTextField(newContact)) {
                 contactService.addContact(newContact);
             }
-        });
-    }
-
-    private void setButtonGoBackListener() {
-        btGoBack.setOnAction(event -> {
-            ViewUtil.showMainView();
         });
     }
 

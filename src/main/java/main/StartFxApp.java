@@ -75,14 +75,9 @@ public class StartFxApp extends Application {
         instance = this;
 
         String MAIN_VIEW_ROOT = PropertiesHolder.getProperty("MAIN_VIEW_ROOT");
-        String ADD_NEW_CONTACT_VIEW_ROOT = PropertiesHolder.getProperty("ADD_NEW_CONTACT_VIEW_ROOT");
-
         Parent mainParent = FXMLLoader.load(getClass().getClassLoader().getResource(MAIN_VIEW_ROOT));
-        Parent addContactParent = FXMLLoader.load(getClass().getClassLoader().getResource(ADD_NEW_CONTACT_VIEW_ROOT));
 
         mainScene = new Scene(mainParent);
-        addContactScene = new Scene(addContactParent);
-
         mainStage = stage;
         String PERSONAL_BOOK_TITLE = PropertiesHolder.getProperty("PERSONAL_BOOK_TITLE");
         mainStage.setTitle(PERSONAL_BOOK_TITLE);

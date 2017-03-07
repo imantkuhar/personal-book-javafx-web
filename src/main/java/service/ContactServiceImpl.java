@@ -96,7 +96,7 @@ public class ContactServiceImpl implements ContactService {
             public void onSuccess(Contact contact) {
                 addView.makeTextFieldEmpty();
                 addView.hideProgress();
-                ViewUtil.showMainView();
+//                ViewUtil.showMainView();
                 mainView.addContactInTable(contact);
             }
 
