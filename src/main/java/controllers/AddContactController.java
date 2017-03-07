@@ -1,6 +1,5 @@
 package controllers;
 
-import api.callback.AddContactCallback;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -9,10 +8,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Contact;
 import service.ContactServiceImpl;
-import utils.ViewUtil;
-import validators.ContactValidator;
+import utils.validators.ContactValidator;
 
-import java.awt.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -20,14 +17,23 @@ import java.util.ResourceBundle;
  * Created by Imant on 17.11.16.
  */
 public class AddContactController extends BaseController implements Initializable {
-    @FXML
-    private Label labelName, labelPhoneNumber, labelAddress, labelGroup;
+
     @FXML
     private TextField tfName, tfPhoneNumber, tfAddress, tfGroup;
     @FXML
     private Button btSave;
     @FXML
     private ProgressIndicator piAddContact;
+
+    private Stage stage;
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
 
     private ContactValidator contactValidator = new ContactValidator();
     private ContactServiceImpl contactService = ContactServiceImpl.getInstance();
@@ -49,10 +55,14 @@ public class AddContactController extends BaseController implements Initializabl
         });
     }
 
-    public void makeTextFieldEmpty(){
+    public void makeTextFieldEmpty() {
         tfName.setText("");
         tfPhoneNumber.setText("");
         tfAddress.setText("");
         tfGroup.setText("");
+    }
+
+    public void closeStage() {
+        stage.close();
     }
 }

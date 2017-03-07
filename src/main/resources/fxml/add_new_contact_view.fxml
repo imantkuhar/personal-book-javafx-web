@@ -1,21 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="320.0" prefWidth="490.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AddContactController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="320.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AddContactController">
     <children>
-        <Label layoutX="20.0" layoutY="20.0" prefHeight="40.0" prefWidth="155.0" text="NAME" textAlignment="CENTER" />
-        <Label layoutX="20.0" layoutY="80.0" prefHeight="40.0" prefWidth="155.0" text="PHONE NUMBER" textAlignment="CENTER" />
-        <Label layoutX="20.0" layoutY="140.0" prefHeight="40.0" prefWidth="155.0" text="ADDRESS" textAlignment="CENTER" />
-        <Label layoutX="20.0" layoutY="200.0" prefHeight="40.0" prefWidth="155.0" text="GROUP" textAlignment="CENTER" />
-        <TextField fx:id="tfName" layoutX="225.0" layoutY="20.0" prefHeight="40.0" prefWidth="245.0" />
-        <TextField fx:id="tfPhoneNumber" layoutX="225.0" layoutY="80.0" prefHeight="40.0" prefWidth="245.0" />
-        <TextField fx:id="tfAddress" layoutX="225.0" layoutY="140.0" prefHeight="40.0" prefWidth="245.0" />
-        <TextField fx:id="tfGroup" layoutX="225.0" layoutY="200.0" prefHeight="40.0" prefWidth="245.0" />
-        <Button fx:id="btSave" layoutX="315.0" layoutY="260.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="155.0" text="SAVE" />
+        <Label layoutX="20.0" layoutY="20.0" prefHeight="40.0" prefWidth="155.0" text="Name" textAlignment="CENTER" />
+        <Label layoutX="20.0" layoutY="80.0" prefHeight="40.0" prefWidth="155.0" text="Phone" textAlignment="CENTER" />
+        <Label layoutX="20.0" layoutY="140.0" prefHeight="40.0" prefWidth="155.0" text="Address" textAlignment="CENTER" />
+        <Label layoutX="20.0" layoutY="200.0" prefHeight="40.0" prefWidth="155.0" text="Group" textAlignment="CENTER" />
+        <TextField fx:id="tfName" layoutX="140.0" layoutY="20.0" prefHeight="40.0" prefWidth="245.0" promptText="Enter name">
+            <font>
+                <Font size="15.0" />
+            </font>
+        </TextField>
+        <TextField fx:id="tfPhoneNumber" layoutX="140.0" layoutY="80.0" prefHeight="40.0" prefWidth="245.0" promptText="Enter phone number">
+            <font>
+                <Font size="15.0" />
+            </font>
+        </TextField>
+        <TextField fx:id="tfAddress" layoutX="140.0" layoutY="141.0" prefHeight="40.0" prefWidth="245.0" promptText="Enter address">
+            <font>
+                <Font size="15.0" />
+            </font>
+        </TextField>
+        <TextField fx:id="tfGroup" layoutX="140.0" layoutY="200.0" prefHeight="40.0" prefWidth="245.0" promptText="Enter group">
+            <font>
+                <Font size="15.0" />
+            </font>
+        </TextField>
+        <Button fx:id="btSave" layoutX="335.0" layoutY="256.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" stylesheets="@../css/buttons.css" />
         <ProgressIndicator fx:id="piAddContact" layoutX="208.0" layoutY="124.0" prefHeight="73.0" prefWidth="74.0" progress="-1.0" visible="false" />
     </children>
 </Pane>

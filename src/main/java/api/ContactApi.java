@@ -12,6 +12,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.async.Callback;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import model.Contact;
+import utils.properties.PropertiesHolder;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ public class ContactApi {
 
     private static ContactApi instance;
 
-    private static final String BASE_URL = "http://localhost:8080";
+    private static final String BASE_URL = PropertiesHolder.getApiProperty(PropertiesHolder.BASE_URL_KEY);
 
     public class JsonDateDeserializer implements JsonDeserializer<Date> {
         public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -36,6 +37,8 @@ public class ContactApi {
     }
 
     private ContactApi() {
+
+
         Gson gson = new Gson();
         Unirest.setObjectMapper(new ObjectMapper() {
             public <T> T readValue(String value, Class<T> valueType) {

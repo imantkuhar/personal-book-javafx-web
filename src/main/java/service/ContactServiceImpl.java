@@ -8,8 +8,8 @@ import api.callback.UpdateContactCallback;
 import controllers.AddContactController;
 import controllers.EditContactController;
 import controllers.MainViewController;
+import javafx.application.Platform;
 import model.Contact;
-import utils.ViewUtil;
 
 import java.util.List;
 
@@ -52,8 +52,10 @@ public class ContactServiceImpl implements ContactService {
         contactApi.getAllContacts(new GetAllContactsCallback() {
             @Override
             public void onSuccess(List<Contact> contacts) {
-                mainView.showContacts(contacts);
-                mainView.hideProgress();
+                Platform.runLater(() -> {
+                    mainView.showContacts(contacts);
+                    mainView.hideProgress();
+                });
             }
 
             @Override
@@ -79,12 +81,12 @@ public class ContactServiceImpl implements ContactService {
 
             @Override
             public void onError() {
-
+                mainView.hideProgress();
             }
 
             @Override
             public void onCanceled() {
-
+                mainView.hideProgress();
             }
         });
     }
@@ -96,18 +98,18 @@ public class ContactServiceImpl implements ContactService {
             public void onSuccess(Contact contact) {
                 addView.makeTextFieldEmpty();
                 addView.hideProgress();
-//                ViewUtil.showMainView();
                 mainView.addContactInTable(contact);
+                Platform.runLater(() -> addView.closeStage());
             }
 
             @Override
             public void onError() {
-
+                addView.hideProgress();
             }
 
             @Override
             public void onCanceled() {
-
+                addView.hideProgress();
             }
         });
     }
@@ -117,19 +119,21 @@ public class ContactServiceImpl implements ContactService {
         contactApi.updateContact(contact, new UpdateContactCallback() {
             @Override
             public void onSuccess(Contact contact) {
-                editView.hideProgress();
-                ViewUtil.showMainView();
-                mainView.updateContact(contact);
+                Platform.runLater(() -> {
+                    editView.hideProgress();
+                    Platform.runLater(() -> editView.closeStage());
+                    mainView.updateContact();
+                });
             }
 
             @Override
             public void onError() {
-
+                editView.hideProgress();
             }
 
             @Override
             public void onCanceled() {
-
+                editView.hideProgress();
             }
         });
     }

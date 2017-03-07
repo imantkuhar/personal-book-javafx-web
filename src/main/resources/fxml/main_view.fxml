@@ -1,30 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.Pane?>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0"
+      prefWidth="810.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controllers.MainViewController">
+    <children>
+        <TextField fx:id="tfFindContact" layoutX="15.0" layoutY="15.0" prefHeight="50.0" prefWidth="521.0"
+                   promptText="Find..."/>
+        <Button fx:id="btAdd" layoutX="552.0" layoutY="15.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0"
+                stylesheets="@../css/buttons.css"/>
+        <Button fx:id="btDelete" layoutX="617.0" layoutY="15.0" mnemonicParsing="false" prefHeight="50.0"
+                prefWidth="50.0" stylesheets="@../css/buttons.css"/>
+        <Button fx:id="btEdit" layoutX="746.0" layoutY="15.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0"
+                stylesheets="@../css/buttons.css"/>
+        <Button fx:id="btUpdate" layoutX="681.0" layoutY="15.0" mnemonicParsing="false" prefHeight="50.0"
+                prefWidth="50.0" stylesheets="@../css/buttons.css"/>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="369.0" prefWidth="614.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainViewController">
-   <children>
-      <TextField fx:id="tfFindContact" layoutX="15.0" layoutY="15.0" prefHeight="40.0" prefWidth="160.0" />
-      <Button fx:id="btAdd" layoutX="185.0" layoutY="15.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="+" />
-      <Button fx:id="btDelete" layoutX="235.0" layoutY="15.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="-" />
-       <Button fx:id="btEdit" layoutX="371.0" layoutY="15.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="104.0" text="Edit contact" />
-       <TableView fx:id="tvContactList" layoutX="14.0" layoutY="67.0" prefHeight="293.0" visible="false">
-        <columns>
-          <TableColumn fx:id="tcId" prefWidth="30.0" text="N" />
-          <TableColumn fx:id="tcName" prefWidth="85.0" text="Name" />
-           <TableColumn fx:id="tcNumber" prefWidth="120.0" text="Number" />
-            <TableColumn fx:id="tcAddress" minWidth="0.0" prefWidth="95.0" text="Address" />
-            <TableColumn fx:id="tcGroup" prefWidth="131" text="Group" />
-            <TableColumn fx:id="tcDate" prefWidth="131" text="Date" />
-        </columns>
-      </TableView>
-      <Button fx:id="btUpdateTable" layoutX="286.0" layoutY="15.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="75.0" text="Update ">
-         <font>
-            <Font size="12.0" />
-         </font></Button>
-      <ProgressIndicator fx:id="piContactList" layoutX="145.0" layoutY="208.0" prefWidth="200.0" progress="-1.0"  />
+        <TableView fx:id="tvContactList" layoutX="15.0" layoutY="91.0" prefHeight="415.0" prefWidth="781.0">
+            <columns>
+                <TableColumn fx:id="tcId" prefWidth="45.0" text="N"/>
+                <TableColumn fx:id="tcName" prefWidth="91.0" text="Name"/>
+                <TableColumn fx:id="tcNumber" prefWidth="132.0" text="Number"/>
+                <TableColumn fx:id="tcAddress" minWidth="0.0" prefWidth="176.0" text="Address"/>
+                <TableColumn fx:id="tcGroup" prefWidth="135.0" text="Group"/>
+                <TableColumn fx:id="tcDate" prefWidth="194.0" text="Date"/>
+            </columns>
+        </TableView>
 
-   </children>
+        <ProgressIndicator fx:id="piContactList" layoutX="305.0" layoutY="220.0" prefWidth="200.0" progress="-1.0"/>
+
+    </children>
 </Pane>

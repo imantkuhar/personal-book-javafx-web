@@ -3,21 +3,13 @@ package controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import model.Contact;
 import service.ContactServiceImpl;
-import utils.PropertiesHolder;
-import utils.ViewUtil;
+import utils.ui.ViewUtil;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,7 +21,7 @@ import java.util.ResourceBundle;
  */
 public class MainViewController extends BaseController implements Initializable {
     @FXML
-    private Button btAdd, btDelete, btEdit, btUpdateTable;
+    private Button btAdd, btDelete, btEdit, btUpdate;
     @FXML
     private TextField tfFindContact;
     @FXML
@@ -42,6 +34,11 @@ public class MainViewController extends BaseController implements Initializable 
 
     private ContactServiceImpl contactService = ContactServiceImpl.getInstance();
 
+    private Contact contact;
+
+    public void setContact(Contact contact) {
+        this.contact = contact;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -60,7 +57,7 @@ public class MainViewController extends BaseController implements Initializable 
     }
 
     private void setButtonUpdateContactListListener() {
-        btUpdateTable.setOnAction(event -> {
+        btUpdate.setOnAction(event -> {
             contactService.getAllContacts();
         });
     }
@@ -99,6 +96,7 @@ public class MainViewController extends BaseController implements Initializable 
             if (id != -1) {
                 Contact contact = contactList.get(id);
                 ViewUtil.showEditView(MainViewController.this, contact);
+                this.contact = contact;
             }
         });
     }
@@ -110,10 +108,6 @@ public class MainViewController extends BaseController implements Initializable 
     }
 
     public void showContacts(List<Contact> contacts) {
-        fillUpContactTable(contacts, tcId, tcName, tcNumber, tcAddress, tcGroup, tcDate, tvContactList, piContactList);
-    }
-
-    private void fillUpContactTable(List<Contact> contacts, TableColumn tcId, TableColumn tcName, TableColumn tcNumber, TableColumn tcAddress, TableColumn tcGroup, TableColumn tcDate, TableView tvContactList, ProgressIndicator piContactList) {
         contactList = FXCollections.observableArrayList(contacts);
         tcId.setCellValueFactory(new PropertyValueFactory<Contact, Integer>("id"));
         tcName.setCellValueFactory(new PropertyValueFactory<Contact, String>("name"));
@@ -122,7 +116,7 @@ public class MainViewController extends BaseController implements Initializable 
         tcGroup.setCellValueFactory(new PropertyValueFactory<Contact, String>("group"));
         tcDate.setCellValueFactory(new PropertyValueFactory<Contact, String>("date"));
         tvContactList.setItems(contactList);
-        piContactList.setVisible(false);
+        hideProgress();
         tvContactList.setVisible(true);
     }
 
@@ -139,17 +133,7 @@ public class MainViewController extends BaseController implements Initializable 
         }
     }
 
-    public void updateContact(Contact contact) {
-        Iterator<Contact> iterator = contactList.iterator();
-        while (iterator.hasNext()) {
-            Contact nextContact = iterator.next();
-            if (nextContact.getId() == contact.getId()){
-                nextContact.setName(contact.getName());
-                nextContact.setPhoneNumber(contact.getPhoneNumber());
-                nextContact.setAddress(contact.getAddress());
-                nextContact.setGroup(contact.getGroup());
-                nextContact.setDate(contact.getDate());
-            }
-        }
+    public void updateContact() {
+        contactService.getAllContacts();
     }
 }
