@@ -11,12 +11,12 @@ import model.Contact;
  */
 public interface ContactService {
 
-    void getAllContacts(GetAllContactsCallback callback);
+    void getAllContacts();
 
-    void updateContact(Contact contact, UpdateContactCallback callback);
+    void updateContact(Contact contact);
 
-    void deleteContact(Contact contact, DeleteContactCallback callback);
+    void deleteContact(Contact contact);
 
-    void addContact(Contact contact, AddContactCallback callback);
+    void addContact(Contact contact);
 
 }

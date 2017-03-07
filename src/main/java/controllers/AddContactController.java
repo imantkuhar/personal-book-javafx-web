@@ -3,14 +3,12 @@ package controllers;
 import api.callback.AddContactCallback;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-import main.StartFxApp;
 import model.Contact;
 import service.ContactServiceImpl;
+import utils.ViewUtil;
 import validators.ContactValidator;
 
 import java.awt.*;
@@ -31,10 +29,12 @@ public class AddContactController extends BaseController implements Initializabl
     private ProgressIndicator piAddContact;
 
     private ContactValidator contactValidator = new ContactValidator();
-    private ContactServiceImpl contactService = new ContactServiceImpl();
+    private ContactServiceImpl contactService = ContactServiceImpl.getInstance();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        contactService.setAddView(this);
+        setProgressIndicator(piAddContact);
         setButtonSaveListener();
         setButtonGoBackListener();
     }
@@ -43,44 +43,21 @@ public class AddContactController extends BaseController implements Initializabl
         btSave.setOnAction(event -> {
             Contact newContact = new Contact(tfName.getText(), tfPhoneNumber.getText(), tfAddress.getText(), tfGroup.getText());
             if (contactValidator.checkAllTextField(newContact)) {
-                showProgress();
-                contactService.addContact(newContact, addContactCallback);
+                contactService.addContact(newContact);
             }
         });
     }
 
     private void setButtonGoBackListener() {
         btGoBack.setOnAction(event -> {
-            Stage mainStage = StartFxApp.getInstance().getMainStage();
-            Scene mainScene = StartFxApp.getInstance().getMainScene();
-            mainStage.setScene(mainScene);
+            ViewUtil.showMainView();
         });
     }
 
-    private AddContactCallback addContactCallback = new AddContactCallback() {
-        @Override
-        public void onSuccess() {
-            hideProgress();
-        }
-
-        @Override
-        public void onError() {
-            hideProgress();
-        }
-
-        @Override
-        public void onCanceled() {
-            hideProgress();
-        }
-    };
-
-    @Override
-    void showProgress() {
-        piAddContact.setVisible(true);
-    }
-
-    @Override
-    void hideProgress() {
-        piAddContact.setVisible(false);
+    public void makeTextFieldEmpty(){
+        tfName.setText("");
+        tfPhoneNumber.setText("");
+        tfAddress.setText("");
+        tfGroup.setText("");
     }
 }

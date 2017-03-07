@@ -1,12 +1,7 @@
 package controllers;
 
-import api.callback.DeleteContactCallback;
-import api.callback.GetAllContactsCallback;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,16 +9,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import main.StartFxApp;
+import javafx.stage.StageStyle;
 import model.Contact;
 import service.ContactServiceImpl;
-import utils.AlertDialogUtil;
 import utils.PropertiesHolder;
+import utils.ViewUtil;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -38,15 +35,18 @@ public class MainViewController extends BaseController implements Initializable 
     @FXML
     private TableView<Contact> tvContactList;
     @FXML
-    private TableColumn tcId, tcName, tcNumber, tcAddress, tcGroup;
+    private TableColumn tcId, tcName, tcNumber, tcAddress, tcGroup, tcDate;
     private ObservableList<Contact> contactList;
     @FXML
     private ProgressIndicator piContactList;
 
-    private ContactServiceImpl contactService = new ContactServiceImpl();
+    private ContactServiceImpl contactService = ContactServiceImpl.getInstance();
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        contactService.setMainView(this);
+        setProgressIndicator(piContactList);
         initContactListView();
         setTextFieldFindContactListener();
         setButtonAddContactListener();
@@ -56,14 +56,12 @@ public class MainViewController extends BaseController implements Initializable 
     }
 
     private void initContactListView() {
-        showProgress();
-        contactService.getAllContacts(getAllContactsCallback);
+        contactService.getAllContacts();
     }
 
     private void setButtonUpdateContactListListener() {
         btUpdateTable.setOnAction(event -> {
-            showProgress();
-            contactService.getAllContacts(getAllContactsCallback);
+            contactService.getAllContacts();
         });
     }
 
@@ -72,7 +70,7 @@ public class MainViewController extends BaseController implements Initializable 
             int id = tvContactList.getSelectionModel().getSelectedIndex();
             if (id != -1) {
                 Contact contact = contactList.get(id);
-                contactService.deleteContact(contact, deleteContactCallback);
+                contactService.deleteContact(contact);
             }
         });
     }
@@ -89,115 +87,69 @@ public class MainViewController extends BaseController implements Initializable 
                     if (contact.toStringForSearch().contains(stringForSearch))
                         contactListByString.add(contact);
                 }
-                ObservableList<Contact> newList =  FXCollections.observableArrayList(contactListByString);
+                ObservableList<Contact> newList = FXCollections.observableArrayList(contactListByString);
                 tvContactList.setItems(newList);
             }
         });
     }
 
     private void setButtonEditContactListener() {
-        btEdit.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                int id = tvContactList.getSelectionModel().getSelectedIndex();
-                if (id != -1) {
-                    Contact contact = contactList.get(id);
-
-                    EditContactController editContactController = new EditContactController();
-                    editContactController.setContact(contact);
-
-                    String EDIT_CONTACT_VIEW_ROOT = PropertiesHolder.getProperty("EDIT_CONTACT_VIEW_ROOT");
-                    FXMLLoader fxmlEditContact = new FXMLLoader(getClass().getClassLoader().getResource(EDIT_CONTACT_VIEW_ROOT));
-                    fxmlEditContact.setController(editContactController);
-                    Parent parent = null;
-
-                    try {
-                        parent = fxmlEditContact.load();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    Scene editContactScene = new Scene(parent);
-                    Stage mainStage = StartFxApp.getInstance().getMainStage();
-                    mainStage.setScene(editContactScene);
-                }
+        btEdit.setOnAction(event -> {
+            int id = tvContactList.getSelectionModel().getSelectedIndex();
+            if (id != -1) {
+                Contact contact = contactList.get(id);
+                ViewUtil.showEditView(MainViewController.this, contact);
             }
         });
     }
 
     private void setButtonAddContactListener() {
         btAdd.setOnAction(event -> {
-            Stage mainStage = StartFxApp.getInstance().getMainStage();
-            Scene addContactScene = StartFxApp.getInstance().getAddContactScene();
-            mainStage.setScene(addContactScene);
+            ViewUtil.showAddView(MainViewController.this);
         });
     }
 
-    private void fillUpContactTable(List<Contact> contacts, TableColumn tcId, TableColumn tcName, TableColumn tcNumber, TableColumn tcAddress, TableColumn tcGroup, TableView tvContactList, ProgressIndicator piContactList) {
+    public void showContacts(List<Contact> contacts) {
+        fillUpContactTable(contacts, tcId, tcName, tcNumber, tcAddress, tcGroup, tcDate, tvContactList, piContactList);
+    }
+
+    private void fillUpContactTable(List<Contact> contacts, TableColumn tcId, TableColumn tcName, TableColumn tcNumber, TableColumn tcAddress, TableColumn tcGroup, TableColumn tcDate, TableView tvContactList, ProgressIndicator piContactList) {
         contactList = FXCollections.observableArrayList(contacts);
         tcId.setCellValueFactory(new PropertyValueFactory<Contact, Integer>("id"));
         tcName.setCellValueFactory(new PropertyValueFactory<Contact, String>("name"));
         tcNumber.setCellValueFactory(new PropertyValueFactory<Contact, String>("phoneNumber"));
         tcAddress.setCellValueFactory(new PropertyValueFactory<Contact, String>("address"));
         tcGroup.setCellValueFactory(new PropertyValueFactory<Contact, String>("group"));
+        tcDate.setCellValueFactory(new PropertyValueFactory<Contact, String>("date"));
         tvContactList.setItems(contactList);
         piContactList.setVisible(false);
         tvContactList.setVisible(true);
     }
 
-    private GetAllContactsCallback getAllContactsCallback = new GetAllContactsCallback() {
-        @Override
-        public void onSuccess(List<Contact> contacts) {
-            hideProgress();
-            fillUpContactTable(contacts, tcId, tcName, tcNumber, tcAddress, tcGroup, tvContactList, piContactList);
-        }
-
-        @Override
-        public void onError() {
-            hideProgress();
-        }
-
-        @Override
-        public void onCanceled() {
-            hideProgress();
-        }
-    };
-
-    private DeleteContactCallback deleteContactCallback = new DeleteContactCallback() {
-        @Override
-        public void onSuccess(Contact contact) {
-            showProgress();
-            contactService.getAllContacts(getAllContactsCallback);
-            AlertDialogUtil.showCancelDialog("FUCK", new AlertDialogUtil.AlertDialogCallback() {
-                @Override
-                public void onConfirm() {
-
-                }
-
-                @Override
-                public void onCanceled() {
-
-                }
-            });
-        }
-
-        @Override
-        public void onError() {
-//            TODO:05.03 .17 just show alert
-        }
-
-        @Override
-        public void onCanceled() {
-        }
-    };
-
-    @Override
-    void showProgress() {
-        piContactList.setVisible(true);
+    public void addContactInTable(Contact contact) {
+        contactList.add(contact);
     }
 
-    @Override
-    void hideProgress() {
-        piContactList.setVisible(false);
+    public void deleteContactFromTable(Contact contact) {
+        Iterator<Contact> iterator = contactList.iterator();
+        while (iterator.hasNext()) {
+            Contact nextContact = iterator.next();
+            if (nextContact.getId() == contact.getId())
+                contactList.remove(nextContact);
+        }
+    }
+
+    public void updateContact(Contact contact) {
+        Iterator<Contact> iterator = contactList.iterator();
+        while (iterator.hasNext()) {
+            Contact nextContact = iterator.next();
+            if (nextContact.getId() == contact.getId()){
+                nextContact.setName(contact.getName());
+                nextContact.setPhoneNumber(contact.getPhoneNumber());
+                nextContact.setAddress(contact.getAddress());
+                nextContact.setGroup(contact.getGroup());
+                nextContact.setDate(contact.getDate());
+            }
+        }
     }
 }

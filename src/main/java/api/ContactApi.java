@@ -1,8 +1,9 @@
 package api;
 
-import api.callback.ContactCallback;
+import api.callback.AddContactCallback;
 import api.callback.DeleteContactCallback;
 import api.callback.GetAllContactsCallback;
+import api.callback.UpdateContactCallback;
 import com.google.gson.*;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -35,7 +36,7 @@ public class ContactApi {
     }
 
     private ContactApi() {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
+        Gson gson = new Gson();
         Unirest.setObjectMapper(new ObjectMapper() {
             public <T> T readValue(String value, Class<T> valueType) {
                 return gson.fromJson(value, valueType);
@@ -99,19 +100,23 @@ public class ContactApi {
     }
 
 
-    public void addContact(Contact contact, ContactCallback callback) {
+    public void addContact(Contact contact, AddContactCallback addContactCallback) {
+        String url = BASE_URL + "/contacts";
         try {
-            Unirest.post(BASE_URL).body(contact).asJsonAsync(new Callback<JsonNode>() {
-                public void completed(HttpResponse<JsonNode> response) {
-
+            Unirest.post(url).header("Content-Type", "application/json").body(contact).asObjectAsync(Contact.class, new Callback<Contact>() {
+                @Override
+                public void completed(HttpResponse<Contact> response) {
+                    addContactCallback.onSuccess(response.getBody());
                 }
 
+                @Override
                 public void failed(UnirestException e) {
-
+                    addContactCallback.onError();
                 }
 
+                @Override
                 public void cancelled() {
-
+                    addContactCallback.onCanceled();
                 }
             });
         } catch (Exception e) {
@@ -119,26 +124,27 @@ public class ContactApi {
         }
     }
 
-    public void updateContact(Contact contact, ContactCallback callback) {
+    public void updateContact(Contact contact, UpdateContactCallback updateContactCallback) {
+        String url = BASE_URL + "/contacts/" + String.valueOf(contact.getId());
         try {
-            Unirest.put(BASE_URL).asJsonAsync(new Callback<JsonNode>() {
-                public void completed(HttpResponse<JsonNode> response) {
-
+            Unirest.put(url).header("Content-Type", "application/json").body(contact).asObjectAsync(Contact.class, new Callback<Contact>() {
+                @Override
+                public void completed(HttpResponse<Contact> response) {
+                    updateContactCallback.onSuccess(response.getBody());
                 }
 
+                @Override
                 public void failed(UnirestException e) {
-
+                    updateContactCallback.onError();
                 }
 
+                @Override
                 public void cancelled() {
-
+                    updateContactCallback.onCanceled();
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-
-
 }

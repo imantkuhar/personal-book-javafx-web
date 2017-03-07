@@ -1,18 +1,13 @@
 package controllers;
 
-import api.callback.UpdateContactCallback;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-import main.StartFxApp;
 import model.Contact;
 import service.ContactServiceImpl;
+import utils.ViewUtil;
 import validators.ContactValidator;
 
 import java.awt.*;
@@ -35,7 +30,7 @@ public class EditContactController extends BaseController implements Initializab
     private ProgressIndicator piEditContact;
 
     private ContactValidator contactValidator = new ContactValidator();
-    private ContactServiceImpl contactService = new ContactServiceImpl();
+    private ContactServiceImpl contactService = ContactServiceImpl.getInstance();
 
     private Contact contact;
 
@@ -45,6 +40,8 @@ public class EditContactController extends BaseController implements Initializab
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        contactService.setEditView(this);
+        setProgressIndicator(piEditContact);
         initContactInfo();
         setButtonSaveChangesListener();
         setButtonGoBackListener();
@@ -58,57 +55,18 @@ public class EditContactController extends BaseController implements Initializab
     }
 
     private void setButtonGoBackListener() {
-        btGoBack.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Stage mainStage = StartFxApp.getInstance().getMainStage();
-                Scene mainScene = StartFxApp.getInstance().getMainScene();
-                mainStage.setScene(mainScene);
-            }
-        });
+        btGoBack.setOnAction(event -> ViewUtil.showMainView());
     }
 
     private void setButtonSaveChangesListener() {
-        btSaveChanges.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                contact.setName(tfName.getText());
-                contact.setPhoneNumber(tfPhoneNumber.getText());
-                contact.setAddress(tfAddress.getText());
-                contact.setGroup(tfGroup.getText());
-
-                if (contactValidator.checkAllTextField(contact)) {
-                    showProgress();
-                    contactService.updateContact(contact, updateContactCallback);
-                }
+        btSaveChanges.setOnAction(event -> {
+            contact.setName(tfName.getText());
+            contact.setPhoneNumber(tfPhoneNumber.getText());
+            contact.setAddress(tfAddress.getText());
+            contact.setGroup(tfGroup.getText());
+            if (contactValidator.checkAllTextField(contact)) {
+                contactService.updateContact(contact);
             }
         });
-    }
-
-    private UpdateContactCallback updateContactCallback = new UpdateContactCallback() {
-        @Override
-        public void onSuccess() {
-            hideProgress();
-        }
-
-        @Override
-        public void onError() {
-            hideProgress();
-        }
-
-        @Override
-        public void onCanceled() {
-            hideProgress();
-        }
-    };
-
-    @Override
-    void showProgress() {
-        piEditContact.setVisible(true);
-    }
-
-    @Override
-    void hideProgress() {
-        piEditContact.setVisible(false);
     }
 }

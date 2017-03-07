@@ -14,7 +14,7 @@ public class Contact {
     private String phoneNumber;
     private String address;
     private String group;
-    private Date date;
+    private String date;
 
     public Contact() {
     }
@@ -66,11 +66,11 @@ public class Contact {
         this.group = group;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -87,7 +87,7 @@ public class Contact {
     }
 
     public String toStringForSearch() {
-        return "" + name + " " + phoneNumber + " " + address + " " + group + "" ;
+        return "" + name + " " + phoneNumber + " " + address + " " + group + " " + date ;
     }
 
 }

@@ -1,11 +1,23 @@
 package controllers;
 
+import javafx.scene.control.ProgressIndicator;
+
 /**
  * Created by Imant on 05.03.17.
  */
 public abstract class BaseController {
 
-    abstract void showProgress();
+    protected ProgressIndicator progressIndicator;
 
-    abstract void hideProgress();
+    public void setProgressIndicator(ProgressIndicator progressIndicator) {
+        this.progressIndicator = progressIndicator;
+    }
+
+    public void showProgress(){
+        progressIndicator.setVisible(true);
+    }
+
+    public void hideProgress(){
+        progressIndicator.setVisible(false);
+    }
 }
